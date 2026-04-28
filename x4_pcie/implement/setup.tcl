@@ -3,7 +3,7 @@ close_project -quiet
 file delete -force proj.xpr *.os *.jou *.log proj.srcs proj.cache proj.runs
 #
 create_project -part xc7a100tfgg484-2 -force proj 
-set_property target_language Verilog [current_project]
+set_property target_language VHDL [current_project]
 set_property default_lib work [current_project]
 load_features ipintegrator
 
@@ -13,10 +13,12 @@ load_features ipintegrator
 
 source ../source/system.tcl
 generate_target {synthesis implementation} [get_files ./proj.srcs/sources_1/bd/system/system.bd]
+# Disable the synthesis checkpoint mode for block design
 set_property synth_checkpoint_mode None    [get_files ./proj.srcs/sources_1/bd/system/system.bd]
 
-read_verilog -sv ../source/axi_regfile/axi_regfile_v1_0_S00_AXI.sv
-read_verilog -sv ../source/top.sv
+#read_verilog -sv ../source/axi_regfile/axi_regfile_v1_0_S00_AXI.sv
+#read_verilog -sv ../source/top.sv
+read_vhdl ../source/system_wrapper.vhd
 
 read_xdc ../source/top.xdc
 #set_property PROCESSING_ORDER EARLY ../source/top.xdc

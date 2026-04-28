@@ -21,13 +21,6 @@ The PCIe lanes are wired in a non-standard way on this board. TCL reset_property
     vivado -mode batch -source compile.tcl
     vivado -mode batch -source spi_program.tcl
 
-# Test
-I installed the LiteFury onto a very inexpensive four lane PCIe to M.2 adapter to facilitate removal and replacement. The board functions correctly that way.
-<img src="IMG_20240207_075841590.jpg">
-
-I also tried a one lane PCIe on the Raspberry Pi Compute Module 5 IO Board. This works well and is something like a low-cost ZynqMP.
-<img src="IMG_20250805_120206312_MP.jpg">
-
 The Xilinx PCIe core provies two address regions. The 64KB region is for DMA access. The 1MB region allows random access to the whole address space.
 ```
 $ lspci -v -s 01:01:00
@@ -41,3 +34,7 @@ $ lspci -v -s 01:01:00
 	Kernel modules: xdma
 ```
 
+After loading the bitstream, do the following to make "lspci" recognize it:
+- Check correct address with "lspci -D | grep -i xilinx"
+- "sudo sh -c 'echo 1 > /sys/bus/pci/devices/<address>/remove'"
+- "sudo sh -c 'echo 1 > /sys/bus/pci/rescan'"
