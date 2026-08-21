@@ -30,3 +30,20 @@ After loading the bitstream, do the following to make "lspci" recognize it:
 - Check correct address with "lspci -D | grep -i xilinx"
 - "sudo sh -c 'echo 1 > /sys/bus/pci/devices/<address>/remove'"
 - "sudo sh -c 'echo 1 > /sys/bus/pci/rescan'"
+
+Steps to do a simple test:
+1) Compile and load the bitstream.
+2) Reboot.
+3) Compile dma drivers
+    - cd dma_ip_drivers/XDAM/linux-kernel/xdma
+    - make
+    - sudo insmod xdma.ko poll_mode=1
+4) Check that /dev/xdma0_h2c_0 and /dev/xdma0_c2h_0 are available
+5) Create test data: python3 -c "import sys; sys.stdout.buffer.write(bytes(range(256)) * 16)" > test_input.bin
+6) Compile helper tools
+    - cd dma_ip_drivers/XDAM/linux-kernel/tools
+    - make
+7) Check from Vivado the base address of the BRAM.
+8) Write data to BRAM: sudo ./dma_to_device -d /dev/xdma0_h2c_0 -f test_input.bin -s 4096 -a <base_address>
+9) Read data from BRAM: sudo ./dma_from_device -d /dev/xdma0_c2h_0 -f test_output.bin -s 4096 -a <base_address>
+10) Compare results, e.g. "diff test_input.bin test_output.bin"
