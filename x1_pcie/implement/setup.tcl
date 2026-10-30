@@ -7,6 +7,7 @@ set_property target_language VHDL [current_project]
 set_property default_lib work [current_project]
 load_features ipintegrator
 
+set_property ip_repo_paths /home/henry/projects/litefury_pcie/x1_pcie/ip_repo/test_v2_1_0 [current_project]
 source ../source/system.tcl
 generate_target {synthesis implementation} [get_files ./proj.srcs/sources_1/bd/system/system.bd]
 # Using the SYNTH_CHECKPOINT_MODE you can specify that the block design will be synthesized as
