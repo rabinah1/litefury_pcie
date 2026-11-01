@@ -17,6 +17,8 @@ entity test_v2_master_stream_v1_0_M00_AXIS is
 	port (
 		-- Users to add ports here
 
+        m_fifo_buffer_idx_0 : in std_logic_vector(C_M_AXIS_TDATA_WIDTH-1 downto 0);
+
 		-- User ports ends
 		-- Do not modify the ports beyond this line
 
@@ -222,13 +224,15 @@ begin
 	                                                                                
 	-- Streaming output data is read from FIFO                                      
 	  process(M_AXIS_ACLK)                                                          
-	  variable  sig_one : integer := 1;                                             
+	  variable  sig_one : integer := 1;
+      variable  sig_ten : integer := 10;
 	  begin                                                                         
 	    if (rising_edge (M_AXIS_ACLK)) then                                         
 	      if(M_AXIS_ARESETN = '0') then                                             
 	    	stream_data_out <= std_logic_vector(to_unsigned(sig_one,C_M_AXIS_TDATA_WIDTH));  
 	      elsif (tx_en = '1') then -- && M_AXIS_TSTRB(byte_index)                   
-	        stream_data_out <= std_logic_vector( to_unsigned(read_pointer,C_M_AXIS_TDATA_WIDTH) + to_unsigned(sig_one,C_M_AXIS_TDATA_WIDTH));
+	        --stream_data_out <= std_logic_vector( to_unsigned(read_pointer,C_M_AXIS_TDATA_WIDTH) + to_unsigned(sig_one,C_M_AXIS_TDATA_WIDTH));
+            stream_data_out <= std_logic_vector(unsigned(m_fifo_buffer_idx_0) + to_unsigned(sig_ten,C_M_AXIS_TDATA_WIDTH));
 	      end if;                                                                   
 	     end if;                                                                    
 	   end process;                                                                 

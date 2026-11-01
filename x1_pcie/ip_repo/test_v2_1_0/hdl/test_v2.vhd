@@ -46,12 +46,15 @@ end test_v2;
 
 architecture arch_imp of test_v2 is
 
+    signal fifo_buffer_idx_0 : std_logic_vector(C_S00_AXIS_TDATA_WIDTH-1 downto 0);
+
 	-- component declaration
 	component test_v2_slave_stream_v1_0_S00_AXIS is
 		generic (
 		C_S_AXIS_TDATA_WIDTH	: integer	:= 32
 		);
 		port (
+        s_fifo_buffer_idx_0 : out std_logic_vector(C_S_AXIS_TDATA_WIDTH-1 downto 0);
 		S_AXIS_ACLK	: in std_logic;
 		S_AXIS_ARESETN	: in std_logic;
 		S_AXIS_TREADY	: out std_logic;
@@ -68,6 +71,7 @@ architecture arch_imp of test_v2 is
 		C_M_START_COUNT	: integer	:= 32
 		);
 		port (
+        m_fifo_buffer_idx_0 : in std_logic_vector(C_M_AXIS_TDATA_WIDTH-1 downto 0);
 		M_AXIS_ACLK	: in std_logic;
 		M_AXIS_ARESETN	: in std_logic;
 		M_AXIS_TVALID	: out std_logic;
@@ -86,6 +90,7 @@ test_v2_slave_stream_v1_0_S00_AXIS_inst : test_v2_slave_stream_v1_0_S00_AXIS
 		C_S_AXIS_TDATA_WIDTH	=> C_S00_AXIS_TDATA_WIDTH
 	)
 	port map (
+        s_fifo_buffer_idx_0 => fifo_buffer_idx_0,
 		S_AXIS_ACLK	=> s00_axis_aclk,
 		S_AXIS_ARESETN	=> s00_axis_aresetn,
 		S_AXIS_TREADY	=> s00_axis_tready,
@@ -102,6 +107,7 @@ test_v2_master_stream_v1_0_M00_AXIS_inst : test_v2_master_stream_v1_0_M00_AXIS
 		C_M_START_COUNT	=> C_M00_AXIS_START_COUNT
 	)
 	port map (
+        m_fifo_buffer_idx_0 => fifo_buffer_idx_0,
 		M_AXIS_ACLK	=> m00_axis_aclk,
 		M_AXIS_ARESETN	=> m00_axis_aresetn,
 		M_AXIS_TVALID	=> m00_axis_tvalid,

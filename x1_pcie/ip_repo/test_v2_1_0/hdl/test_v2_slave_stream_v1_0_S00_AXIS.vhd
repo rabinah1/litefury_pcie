@@ -15,6 +15,8 @@ entity test_v2_slave_stream_v1_0_S00_AXIS is
 	port (
 		-- Users to add ports here
 
+        s_fifo_buffer_idx_0 : out std_logic_vector(C_S_AXIS_TDATA_WIDTH-1 downto 0);
+
 		-- User ports ends
 		-- Do not modify the ports beyond this line
 
@@ -171,6 +173,8 @@ begin
 	end generate FIFO_GEN;
 
 	-- Add user logic here
+
+    s_fifo_buffer_idx_0 <= stream_data_fifo(0);
 
 	-- User logic ends
 
