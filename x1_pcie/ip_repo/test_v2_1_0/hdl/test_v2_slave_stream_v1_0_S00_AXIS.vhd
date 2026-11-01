@@ -81,6 +81,10 @@ architecture arch_imp of test_v2_slave_stream_v1_0_S00_AXIS is
 	signal writes_done : std_logic;
 
 	type BYTE_FIFO_TYPE is array (0 to (NUMBER_OF_INPUT_WORDS-1)) of std_logic_vector(((C_S_AXIS_TDATA_WIDTH/4)-1)downto 0);
+    signal stream_data_fifo_0 : BYTE_FIFO_TYPE;
+    signal stream_data_fifo_1 : BYTE_FIFO_TYPE;
+    signal stream_data_fifo_2 : BYTE_FIFO_TYPE;
+    signal stream_data_fifo_3 : BYTE_FIFO_TYPE;
 begin
 	-- I/O Connections assignments
 
@@ -158,14 +162,23 @@ begin
 	-- FIFO Implementation
 	 FIFO_GEN: for byte_index in 0 to (C_S_AXIS_TDATA_WIDTH/8-1) generate
 
-	 signal stream_data_fifo : BYTE_FIFO_TYPE;
+	 --signal stream_data_fifo : BYTE_FIFO_TYPE;
 	 begin   
 	  -- Streaming input data is stored in FIFO
 	  process(S_AXIS_ACLK)
 	  begin
 	    if (rising_edge (S_AXIS_ACLK)) then
 	      if (fifo_wren = '1') then
-	        stream_data_fifo(write_pointer) <= S_AXIS_TDATA((byte_index*8+7) downto (byte_index*8));
+            if (byte_index = 0) then
+              stream_data_fifo_0(write_pointer) <= S_AXIS_TDATA((byte_index*8+7) downto (byte_index*8));
+            elsif (byte_index = 1) then
+              stream_data_fifo_1(write_pointer) <= S_AXIS_TDATA((byte_index*8+7) downto (byte_index*8));
+            elsif (byte_index = 2) then
+              stream_data_fifo_2(write_pointer) <= S_AXIS_TDATA((byte_index*8+7) downto (byte_index*8));
+            else
+              stream_data_fifo_3(write_pointer) <= S_AXIS_TDATA((byte_index*8+7) downto (byte_index*8));
+            end if;
+	        --stream_data_fifo(write_pointer) <= S_AXIS_TDATA((byte_index*8+7) downto (byte_index*8));
 	      end if;  
 	    end  if;
 	  end process;
@@ -174,7 +187,7 @@ begin
 
 	-- Add user logic here
 
-    s_fifo_buffer_idx_0 <= stream_data_fifo(0);
+    s_fifo_buffer_idx_0 <= stream_data_fifo_3(0) & stream_data_fifo_2(0) & stream_data_fifo_1(0) & stream_data_fifo_0(0);
 
 	-- User logic ends
 
